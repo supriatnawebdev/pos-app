@@ -9,26 +9,34 @@ PRODUK
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header">
-                    <button class="btn  btn-info" onclick="addForm('{{ route('produk.store') }}')">Tambah Data</button>
+                    <div class="btn-group">
+                        <button class="btn  btn-info" onclick="addForm('{{ route('produk.store') }}')">Add Data</button>
+                        <button class="btn  btn-danger" onclick="deleteSelected('{{ route('produk.delete_selected') }}')">Delete All</button>
+                        <button class="btn  btn-success" onclick="cetakBarcode('{{ route('produk.cetak_barcode') }}')">Barcode</button>
+                    </div>
                 </div>
                 <div class="box-body">
-                    <table class="table table-striped table-responsive table-bordered">
-                        <thead>
-                            <th width="5%">No</th>
-                            <th>Kode Produk</th>
-                            <th>Nama Produk</th>
-                            <th>Kategori</th>
-                            <th>Merk</th>
-                            <th>Harga Beli</th>
-                            <th>Harga Jual</th>
-                            <th>Diskon</th>
-                            <th>Stok</th>
-                            <th width="15%"><i class="fa fa-cog"></i></th>
-                        </thead>
-                        <tbody>
-                       
-                        </tbody>
-                    </table>
+                    <form method="post" class="form-produk">
+                        @csrf
+                        <table class="table table-striped table-responsive table-bordered">
+                            <thead>
+                                <th>
+                                    <input type="checkbox" name="select_all" id="select_all"/>
+                                </th>
+                                <th width="5%">No</th>
+                                <th>Kode Produk</th>
+                                <th>Nama Produk</th>
+                                <th>Kategori</th>
+                                <th>Merk</th>
+                                <th>Harga Beli</th>
+                                <th>Harga Jual</th>
+                                <th>Diskon</th>
+                                <th>Stok</th>
+                                <th width="15%"><i class="fa fa-cog"></i></th>
+                            </thead>
+                        </table>
+                    </form>
+                    
                 </div>
             </div>
         </div>
@@ -50,6 +58,7 @@ PRODUK
                     url: '{{ route('produk.data')}}',
                 },
                 columns : [
+                    {data: 'select_all'},
                     {data: 'DT_RowIndex', searchable:false, sortable:false},
                     {data: 'kode_produk'},
                     {data: 'nama_produk'},
@@ -81,6 +90,13 @@ PRODUK
                     });
                 }
          });
+
+
+         select_all
+         $('[name=select_all]').on('click', function () {
+            $(':checkbox').prop('checked', this.checked)
+         });
+
         });
 
         function addForm(url){
@@ -107,6 +123,13 @@ PRODUK
             
                     .done((response) => {
                         $('#modal-form [name=nama_produk]').val(response.nama_produk);
+                        // $('#modal-form [name=kode_produk]').val(response.kode_produk);
+                        $('#modal-form [name=id_kategori]').val(response.id_kategori);
+                        $('#modal-form [name=merek]').val(response.merek);
+                        $('#modal-form [name=harga_beli]').val(response.harga_beli);
+                        $('#modal-form [name=harga_jual]').val(response.harga_jual);
+                        $('#modal-form [name=diskon]').val(response.diskon);
+                        $('#modal-form [name=stok]').val(response.stok);
                     })
                     .fail((errors) => {
                         alert('Tidak dapat menampilkan data');
@@ -133,6 +156,51 @@ PRODUK
                         });
                         }
                 }
+
+            function deleteSelected(url) {
+
+                if($('input:checked').length >= 1){
+                        if (confirm('Yakin ingin mengapus data yang dipilih?')){
+                        $.post(url, $('.form-produk').serialize())
+                            .done((response) => {
+                                table.ajax.reload();
+                                })
+                                .fail((errors) => {
+                                    alert('Tidak dapat menghapus data');
+                                    return;
+                                });
+                            
+                        }
+                        else{
+                            alert('Pilih datayang akan dihapus');
+                            return;
+                           }
+                }
+            }
+
+
+            // cetak Barcode
+            function cetakBarcode(url){
+                if($('input:checked').length < 1){
+                      
+                        alert('Pilih data yang akan dicetak');
+                        return;    
+                    }else if($('input:checked').length < 3) {
+                        alert('Minimal pilih 3 data yang akan dicetak');
+                        return;   
+                    }else {
+
+
+                        $('.form-produk')
+                            .attr('target', '_blank')
+                            .attr('action', url)
+                            .submit();
+
+
+                    }
+                       
+                
+            }
 
 
             

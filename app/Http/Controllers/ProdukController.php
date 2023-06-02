@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use App\Models\Kategori;
+use PDF;
 use Illuminate\Http\Request;
 
 class ProdukController extends Controller
@@ -32,15 +33,26 @@ class ProdukController extends Controller
       return datatables()
       ->of($produk)
       ->addIndexColumn()
+      ->addColumn('select_all', function( $produk){
+        return '
+        <input type="checkbox" name="id[]" value="'.$produk->id.'"/>
+        ';
+      })
+      ->addColumn('harga_beli', function( $produk){
+        return format_idr($produk->harga_beli);
+      })
+      ->addColumn('harga_jual', function( $produk){
+        return format_idr($produk->harga_jual);
+      })
       ->addColumn('aksi', function( $produk) {
         return '
         <div class="btn-group ">                      
-        <button onclick="editData(`'.route('produk.update', $produk->id).'`)" class="btn btn-warning btn-sm">Edit</button>
-        <button onclick="deleteData(`'.route('produk.destroy',  $produk->id).'`)" class="btn btn-danger btn-sm">Delete</button>
+        <button type="button" onclick="editData(`'.route('produk.update', $produk->id).'`)" class="btn btn-warning btn-sm">Edit</button>
+        <button type="button" onclick="deleteData(`'.route('produk.destroy',  $produk->id).'`)" class="btn btn-danger btn-sm">Delete</button>
         </div>
         ';
        })
-      ->rawColumns(['aksi'])
+      ->rawColumns(['aksi','select_all'])
       ->make(true);
     }
 
@@ -112,10 +124,22 @@ class ProdukController extends Controller
     public function update(Request $request, $id)
     {
         $produk = Produk::find($id);
-        $produk->nama_produk = $request->nama_produk;
-        $produk->update();
+        $produk->update($request->all());
 
         return response()->json('Data berhsil diupdate', 200);
+    }
+
+
+
+    // function delete selected
+    public function deleteSelected(Request $request){
+        // return $request->id;
+        foreach ($request->id as $id_produk) {
+            # code...
+            $produk = Produk::find($id_produk);
+            $produk->delete();
+        }
+        return response(null, 204);
     }
 
     /**
@@ -130,4 +154,25 @@ class ProdukController extends Controller
         $produk->delete();
         return response(null, 204);
     }
+
+
+    // cetak barCode
+    public function cetakBarcode(Request $request){
+        
+        $no =1;
+        $dataProduk = array();
+        foreach ($request->id as $id) {
+            # code...
+            $produk = Produk::find($id);
+            $dataProduk[] = $produk;
+            
+        }
+
+        $pdf = PDF::loadView('produk.barcode', compact('dataProduk', 'no'));
+        $pdf->setPaper('a4', 'potrait');
+        return $pdf->stream('produk.pdf');
+    }
+
+
+
 }

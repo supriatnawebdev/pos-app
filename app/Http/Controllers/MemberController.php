@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use PDF;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
@@ -24,18 +25,23 @@ class MemberController extends Controller
       return datatables()
       ->of($member)
       ->addIndexColumn()
+      ->addColumn('select_all', function( $member){
+        return '
+        <input type="checkbox" name="id[]" value="'.$member->id.'"/>
+        ';
+      })
       ->addColumn('kode_member', function ($member){
         return '<span class="label label-success">'.$member->kode_member.'</span>';
       })
       ->addColumn('aksi', function( $member) {
         return '
-        <div class="btn-group ">                      
-        <button onclick="editData(`'.route('member.update', $member->id).'`)" class="btn btn-warning btn-sm">Edit</button>
-        <button onclick="deleteData(`'.route('member.destroy',  $member->id).'`)" class="btn btn-danger btn-sm">Delete</button>
+        <div class="btn-group ">
+        <button type="button" onclick="editData(`'.route('member.update', $member->id).'`)" class="btn btn-warning btn-sm">Edit</button>
+        <button type="button" onclick="deleteData(`'.route('member.destroy',  $member->id).'`)" class="btn btn-danger btn-sm">Delete</button>
         </div>
         ';
        })
-      ->rawColumns(['aksi','kode_member'])
+      ->rawColumns(['aksi','kode_member', 'select_all'])
       ->make(true);
     }
 
@@ -60,7 +66,7 @@ class MemberController extends Controller
 
         $member = Member::latest()->first() ?? new Member();
          $kode_member= (int) $member->kode_member + 1;
-       
+
 
 
         $member = new Member();
@@ -105,7 +111,7 @@ class MemberController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $member = Member::find($id)->update($request->all());
         // $member->update();
 
@@ -123,5 +129,26 @@ class MemberController extends Controller
         $member = Member::find($id);
         $member->delete();
         return response(null, 204);
+    }
+
+
+    // cetak member
+    public function cetakMember(Request $request){
+
+        $no =1;
+        $dataMember = collect(array());
+        foreach ($request->id as $id) {
+            # code...
+            $member = Member::find($id);
+            $dataMember[] = $member;
+
+        }
+
+        $dataMember = $dataMember->chunk(2);
+
+        $pdf = PDF::loadView('member.cetak', compact('dataMember', 'no'));
+        $pdf->setPaper('a4', 'potrait');
+        return $pdf->stream('member.pdf');
+
     }
 }

@@ -1,6 +1,6 @@
 @extends('layout.admin')
 @section('title')
-MEMBER
+SUPLIER
 @endsection
 @section('content')
 <section class="content">
@@ -11,19 +11,15 @@ MEMBER
                 <div class="box-header">
                     <div class="box-body">
                         <div class="btn-group">
-                            <button class="btn  btn-info" onclick="addForm('{{ route('member.store') }}')">Tambah Data</button>
-                            <button class="btn  btn-success" onclick="cetakMember('{{ route('member.cetak_member') }}')">Cetak Member</button>
+                            <button class="btn  btn-info" onclick="addForm('{{ route('suplier.store') }}')">Tambah Data</button>
+                            {{-- <button class="btn  btn-success" onclick="cetaksuplier('{{ route('suplier.cetak_suplier') }}')">Cetak suplier</button> --}}
                         </div>
                 </div>
                 <form method="post" class="form-produk">
                     @csrf
                     <table class="table table-striped table-responsive table-bordered">
                         <thead>
-                            <th>
-                                <input type="checkbox" name="select_all" id="select_all"/>
-                            </th>
                             <th width="5%">No</th>
-                            <th>Kode</th>
                             <th>Nama</th>
                             <th>Telepon</th>
                             <th>Alamat</th>
@@ -40,7 +36,7 @@ MEMBER
     </div>
   </section>
 
-  @includeIf('member.form')
+  @includeIf('suplier.form')
 @endsection
 
 @push('scripts')
@@ -52,13 +48,13 @@ MEMBER
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: '{{ route('member.data')}}',
+                    url: '{{ route('suplier.data')}}',
                 },
                 columns : [
-                    {data: 'select_all'},
+                    // {data: 'select_all'},
                     {data: 'DT_RowIndex', searchable:false, sortable:false},
-                    {data: 'kode_member'},
-                    {data: 'nama_member'},
+                    // {data: 'kode_suplier'},
+                    {data: 'nama_suplier'},
                     {data: 'telpon'},
                     {data: 'alamat'},
                     {data: 'aksi', searchable: false, sortable: false}
@@ -85,20 +81,20 @@ MEMBER
          });
 
            //  select_all
-           $('[name=select_all]').on('click', function () {
-            $(':checkbox').prop('checked', this.checked)
-         });
+        //    $('[name=select_all]').on('click', function () {
+        //     $(':checkbox').prop('checked', this.checked)
+        //  });
 
         });
 
         function addForm(url){
             $('#modal-form').modal('show');
-            $('#modal-form .modal-title').text('Tambah member');
+            $('#modal-form .modal-title').text('Tambah suplier');
 
             $('#modal-form form')[0].reset();
             $('#modal-form form').attr('action', url);
             $('#modal-form [name=_method]').val('post');
-            $('#modal-form [name=nama_member]').focus();
+            $('#modal-form [name=nama_suplier]').focus();
 
         }
         // edit data
@@ -109,12 +105,12 @@ MEMBER
             $('#modal-form form')[0].reset();
             $('#modal-form form').attr('action', url);
             $('#modal-form [name=_method]').val('put');
-            $('#modal-form [name=nama_member]').focus();
+            $('#modal-form [name=nama_suplier]').focus();
 
             $.get(url)
 
                     .done((response) => {
-                        $('#modal-form [name=nama_member]').val(response.nama_member);
+                        $('#modal-form [name=nama_suplier]').val(response.nama_suplier);
                         $('#modal-form [name=telpon]').val(response.telpon);
                         $('#modal-form [name=alamat]').val(response.alamat);
 
@@ -146,25 +142,7 @@ MEMBER
                 }
 
 
-                function cetakMember(url){
-                    if($('input:checked').length < 1){
 
-                        alert('Pilih data yang akan dicetak');
-                        return;
-                        }else if($('input:checked').length <= 2) {
-                        alert('Minimal pilih 2 data yang akan dicetak');
-                        return;
-                        }else {
-
-
-                        $('.form-produk')
-                            .attr('target', '_blank')
-                            .attr('action', url)
-                            .submit();
-
-
-                        }
-                }
 
 
 

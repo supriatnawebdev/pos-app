@@ -4,7 +4,7 @@ PRODUK
 @endsection
 @section('content')
 <section class="content">
-   
+
     <div class="row">
         <div class="col-md-12">
             <div class="box">
@@ -36,7 +36,7 @@ PRODUK
                             </thead>
                         </table>
                     </form>
-                    
+
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@ PRODUK
          });
 
 
-         select_all
+        //  select_all
          $('[name=select_all]').on('click', function () {
             $(':checkbox').prop('checked', this.checked)
          });
@@ -120,7 +120,7 @@ PRODUK
             $('#modal-form [name=nama_produk]').focus();
 
             $.get(url)
-            
+
                     .done((response) => {
                         $('#modal-form [name=nama_produk]').val(response.nama_produk);
                         // $('#modal-form [name=kode_produk]').val(response.kode_produk);
@@ -138,7 +138,7 @@ PRODUK
 
         }
 
-   
+
             function deleteData(url){
                 let token   = $("meta[name='csrf-token']").attr("content");
                 if (confirm('Yakin ingin mengapus data yang dipilih?')){
@@ -169,25 +169,25 @@ PRODUK
                                     alert('Tidak dapat menghapus data');
                                     return;
                                 });
-                            
+
                         }
-                        else{
-                            alert('Pilih datayang akan dihapus');
-                            return;
-                           }
-                }
+                    }
+                    else{
+                        alert('Pilih datayang akan dihapus');
+                        return;
+                       }
             }
 
 
             // cetak Barcode
             function cetakBarcode(url){
                 if($('input:checked').length < 1){
-                      
+
                         alert('Pilih data yang akan dicetak');
-                        return;    
+                        return;
                     }else if($('input:checked').length < 3) {
                         alert('Minimal pilih 3 data yang akan dicetak');
-                        return;   
+                        return;
                     }else {
 
 
@@ -198,11 +198,11 @@ PRODUK
 
 
                     }
-                       
-                
+
+
             }
 
 
-            
+
     </script>
 @endpush

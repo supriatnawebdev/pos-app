@@ -27,7 +27,7 @@
             <li class=""><a href="{{route('kategori.index')}}"><i class="fa fa-cube"></i> Kategori</a></li>
             <li><a href="{{route('produk.index')}}"><i class="fa fa-cubes"></i> Produk</a></li>
             <li><a href="{{route('member.index')}}"><i class="fa fa-id-card"></i> Member</a></li>
-            <li><a href="{{route('dashboard')}}"><i class="fa fa-truck"></i> Suplier</a></li>
+            <li><a href="{{route('suplier.index')}}"><i class="fa fa-truck"></i> Suplier</a></li>
           </ul>
         </li>
         <li class=" treeview">

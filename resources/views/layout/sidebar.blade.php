@@ -38,8 +38,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{asset('/adminlte')}}/index2.html"><i class="fa fa-money"></i> Pengeluaran</a></li>
-            <li><a href="{{asset('/adminlte')}}/index2.html"><i class="fa fa-download"></i> Pembelian</a></li>
+            <li><a href="{{route('pengeluaran.index')}}"><i class="fa fa-money"></i> Pengeluaran</a></li>
+            <li><a href="{{route('pembelian.index')}}"><i class="fa fa-download"></i> Pembelian</a></li>
             <li><a href="{{asset('/adminlte')}}/index2.html"><i class="fa fa-upload"></i> Penjualan</a></li>
             <li><a href="{{asset('/adminlte')}}/index2.html"><i class="fa fa-cart-arrow-down"></i> Transaksi Lama</a></li>
             <li><a href="{{asset('/adminlte')}}/index2.html"><i class="fa fa-cart-arrow-down"></i> Transaksi Baru</a></li>

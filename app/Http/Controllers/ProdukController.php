@@ -46,7 +46,7 @@ class ProdukController extends Controller
       })
       ->addColumn('aksi', function( $produk) {
         return '
-        <div class="btn-group ">                      
+        <div class="btn-group ">
         <button type="button" onclick="editData(`'.route('produk.update', $produk->id).'`)" class="btn btn-warning btn-sm">Edit</button>
         <button type="button" onclick="deleteData(`'.route('produk.destroy',  $produk->id).'`)" class="btn btn-danger btn-sm">Delete</button>
         </div>
@@ -78,15 +78,20 @@ class ProdukController extends Controller
         // $produk->nama_produk = $request->nama_produk;
         // $produk->save();
 
-        $produk = Produk::latest()->first();
-        if($produk){
+        $produk = Produk::latest()->first() ?? new Produk();
+        $kode_produk = 'P'. tambah_nol_didepan((int)$produk->id +1, 6);
 
-            $request['kode_produk'] = 'P'. tambah_nol_didepan((int)$produk->id+1, 7);
-        } else {
-            
-            $request['kode_produk'] = 'P'. tambah_nol_didepan((int)1, 7);
-        }
-        $produk = Produk::create($request->all());
+
+       $produk = new Produk();
+       $produk->kode_produk = $kode_produk;
+       $produk->nama_produk = $request->nama_produk;
+       $produk->id_kategori = $request->id_kategori;
+       $produk->merek = $request->merek;
+       $produk->harga_beli = $request->harga_beli;
+       $produk->harga_jual = $request->harga_jual;
+       $produk->diskon = $request->diskon;
+       $produk->stok = $request->stok;
+       $produk->save();
 
         return response()->json('Data berhsil disimpn', 200);
     }
@@ -158,14 +163,14 @@ class ProdukController extends Controller
 
     // cetak barCode
     public function cetakBarcode(Request $request){
-        
+
         $no =1;
         $dataProduk = array();
         foreach ($request->id as $id) {
             # code...
             $produk = Produk::find($id);
             $dataProduk[] = $produk;
-            
+
         }
 
         $pdf = PDF::loadView('produk.barcode', compact('dataProduk', 'no'));

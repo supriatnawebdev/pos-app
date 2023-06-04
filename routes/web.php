@@ -5,6 +5,9 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\SuplierController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\PembelianDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,5 +51,17 @@ Route::group(['middleware' => 'auth'], function (){
     Route::resource('/produk', ProdukController::class);
     Route::post('/produk/delete-selected', [ProdukController::class, 'deleteSelected'])->name('produk.delete_selected');
     Route::post('/produk/cetak-barcode', [ProdukController::class, 'cetakBarcode'])->name('produk.cetak_barcode');
+
+    Route::get('/pengeluaran/data', [PengeluaranController::class, 'data'])->name('pengeluaran.data');
+    Route::resource('/pengeluaran', PengeluaranController::class);
+
+    // transaksi pengeluaran
+    Route::get('/pembelian/data', [PembelianController::class, 'data'])->name('pembelian.data');
+    Route::get('/pembelian/{id}/create', [PembelianController::class, 'create'])->name('pembelian.create');
+
+    Route::resource('/pembelian', PembelianController::class)->except('create');
+
+    Route::resource('/pembelian_detail', PembelianDetailController::class)
+    ->except(['create','show', 'edit']);
 
 });

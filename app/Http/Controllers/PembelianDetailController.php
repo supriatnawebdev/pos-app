@@ -30,7 +30,6 @@ class PembelianDetailController extends Controller
     {
       $pembelianDetail = PembelianDetail::with('produk')->where('id_pembelian', $id)->get();
 
-    //   return $pembelianDetail;
       return datatables()
       ->of($pembelianDetail)
       ->addIndexColumn()
@@ -40,6 +39,12 @@ class PembelianDetailController extends Controller
       ->addColumn('kode_produk', function ($pembelianDetail){
           return $pembelianDetail->produk['kode_produk'];
       })
+    //   ->addColumn('harga_beli', function ($pembelianDetail){
+    //       return format_idr($pembelianDetail->harga_beli);
+    //   })
+    //   ->addColumn('subtotal', function ($pembelianDetail){
+    //       return format_idr($pembelianDetail->subtotal);
+    //   })
       ->addColumn('aksi', function( $pembelianDetail) {
         return '
         <div class="btn-group ">
@@ -47,7 +52,7 @@ class PembelianDetailController extends Controller
         </div>
         ';
        })
-      ->rawColumns(['aksi', ])
+      ->rawColumns(['aksi'])
       ->make(true);
     }
 
@@ -73,6 +78,13 @@ class PembelianDetailController extends Controller
         return response()->json('data berhasil disimpan', 200);
 
 
+    }
+
+    public function destroy($id)
+    {
+        $pembelianDetail = PembelianDetail::find($id);
+        $pembelianDetail->delete();
+        return response(null, 204);
     }
 
 }

@@ -11,7 +11,7 @@
           </div>
           <div class="modal-body">
 
-            <table class="table table-striped table-responsive table-bordered">
+            <table class="table table-striped table-responsive table-bordered table-produk">
 
                     <thead>
                         <th width="5%">No</th>
@@ -36,7 +36,7 @@
                             <td>{{ $produk->stok }}</td>
                             <td>
                                 <a href="#" class="btn btn-primary"
-                                onclick="pilihProduk({{ $produk->id }}, '{{ $produk->kode_produk }}')">
+                                onclick="pilihProduk('{{ $produk->id }}','{{ $produk->kode_produk }}')">
                                     <i class="fa fa-check-circle"></i>
                                     Pilih
                                 </a>

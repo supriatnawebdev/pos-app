@@ -35,6 +35,7 @@ TRANSAKSI PEMBELIAN DETAIL
                                     @csrf
                                     <label for="kode_produk">Kode Produk</label>
                                     <div class="input-group">
+                                        <input type="hidden" name="id_pembelian" id="id_pembelian" value="{{ $id_pembelian }}">
                                         <input type="hidden" name="id_produk" id="id_produk">
                                         <input type="text" class="form-control" name="kode_produk" id="kode_produk">
                                         <span class="input-group-btn ">
@@ -77,19 +78,21 @@ TRANSAKSI PEMBELIAN DETAIL
         $(function(){
 
            table = $('.table').DataTable({
-                // processing: true,
-                // autowidth: false,
-                // ajax: {
-                //     url: '{{ route('pengeluaran.data')}}',
-                // },
-                // columns : [
-                //     // {data: 'select_all'},
-                //     {data: 'DT_RowIndex', searchable:false, sortable:false},
-                //     {data: 'created_at'},
-                //     {data: 'deskripsi'},
-                //     {data: 'nominal'},
-                //     {data: 'aksi', searchable: false, sortable: false}
-                // ]
+                processing: true,
+                autowidth: false,
+                ajax: {
+                    url: '{{ route('pembelian_detail.data', $id_pembelian)}}',
+                },
+                columns : [
+                    // {data: 'select_all'},
+                    {data: 'DT_RowIndex', searchable:false, sortable:false},
+                    {data: 'kode_produk'},
+                    {data: 'nama_produk'},
+                    {data: 'harga_beli'},
+                    {data: 'jumlah'},
+                    {data: 'subtotal'},
+                    {data: 'aksi', searchable: false, sortable: false}
+                ]
          });
 
 

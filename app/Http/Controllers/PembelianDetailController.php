@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pembelian;
 use App\Models\Produk;
 use App\Models\Suplier;
 use Illuminate\Http\Request;
@@ -39,12 +40,16 @@ class PembelianDetailController extends Controller
       ->addColumn('kode_produk', function ($pembelianDetail){
           return $pembelianDetail->produk['kode_produk'];
       })
-    //   ->addColumn('harga_beli', function ($pembelianDetail){
-    //       return format_idr($pembelianDetail->harga_beli);
-    //   })
-    //   ->addColumn('subtotal', function ($pembelianDetail){
-    //       return format_idr($pembelianDetail->subtotal);
-    //   })
+      ->addColumn('harga_beli', function ($pembelianDetail){
+          return format_idr($pembelianDetail->harga_beli);
+      })
+      ->addColumn('subtotal', function ($pembelianDetail){
+          return format_idr($pembelianDetail->subtotal);
+      })
+      ->addColumn('jumlah', function ($pembelianDetail){
+          return '<input type="number" class="form-control input-sm edit-quantity" data-id="'. $pembelianDetail->id .'"  name="jumlah_'. $pembelianDetail->id .'"
+          value="'. $pembelianDetail->jumlah.'"/>';
+      })
       ->addColumn('aksi', function( $pembelianDetail) {
         return '
         <div class="btn-group ">
@@ -52,7 +57,7 @@ class PembelianDetailController extends Controller
         </div>
         ';
        })
-      ->rawColumns(['aksi'])
+      ->rawColumns(['aksi','jumlah'])
       ->make(true);
     }
 
@@ -76,9 +81,18 @@ class PembelianDetailController extends Controller
         $detailPembelian->save();
 
         return response()->json('data berhasil disimpan', 200);
-
-
     }
+
+    public function update(Request $request, $id){
+        $detailPembelian = PembelianDetail::find($id);
+        $detailPembelian->jumlah = $request->jumlah;
+        $detailPembelian->subtotal = $detailPembelian->harga_beli * $request->jumlah;
+        $detailPembelian->update();
+        // return response()->json('data berhasil dupdate', 200);
+    }
+
+
+
 
     public function destroy($id)
     {

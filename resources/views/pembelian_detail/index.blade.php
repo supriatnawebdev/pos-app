@@ -87,6 +87,36 @@ TRANSAKSI PEMBELIAN DETAIL
 
          table2 = $('.table-produk').DataTable();
 
+         $(document).on('input', '.edit-quantity', function(){
+            let token   = $("meta[name='csrf-token']").attr("content");
+
+            let id = $(this).data("id");
+            let jumlah = parseInt($(this).val());
+            // console.log(jumlah)
+            // return;
+
+
+            if(jumlah> 100){
+                alert('jumlah tidak boleh lebih dari 100');
+                return;
+            }
+
+            $.post(`{{ url('/pembelian_detail')}}/${id}`, {
+                '_method' : 'PUT',
+                '_token': token,
+                'jumlah': jumlah
+            })
+            .done((response) => {
+                $(this).on('mouseout', function(){
+                    table.ajax.reload();
+                });
+                    })
+                    .fail((errors) => {
+                        alert('Tidak dapat menyimpan data');
+                        return;
+                        });
+         });
+
 
         });
 
